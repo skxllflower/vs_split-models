@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "id": "demucs-ft",
+  "name": "Standard (4 stems)",
+  "description": "Vocals, Drums, Bass, Other. Meta's fine-tuned HT-Demucs. Runs on any CPU.",
+  "family": "demucs",
+  "version": "1.0.0",
+  "license": {
+    "spdx": "MIT",
+    "url": "https://github.com/facebookresearch/demucs",
+    "text_file": "LICENSE.txt"
+  },
+  "credits": [
+    "Meta AI Research: HT-Demucs (Rouard, Massa, Defossez, ICASSP 2023)",
+    "StemSplit: ONNX export (huggingface.co/StemSplitio/htdemucs-ft-onnx)"
+  ],
+  "stems": [
+    "vocals",
+    "drums",
+    "bass",
+    "other"
+  ],
+  "virtual_stems": [
+    "instrumental"
+  ],
+  "sample_rate": 44100,
+  "impl": {
+    "kind": "demucs_waveform",
+    "input": "mix",
+    "output": "stems",
+    "segment_samples": 343980,
+    "overlap": 0.25,
+    "stems_order": [
+      "drums",
+      "bass",
+      "other",
+      "vocals"
+    ]
+  },
+  "files": [
+    {
+      "name": "htdemucs_ft_vocals_fp16weights.onnx",
+      "stem": "vocals",
+      "sha256": "0cbe651f535415c9d26a7bb614f7d322dd5a080fa0298f2e50f478030a994dce",
+      "size": 165612636,
+      "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-ft-1.0.0/htdemucs_ft_vocals_fp16weights.onnx"
+    },
+    {
+      "name": "htdemucs_ft_drums_fp16weights.onnx",
+      "stem": "drums",
+      "sha256": "047764dff888cfb87da917013377d4ec7a134f7419cbe486d9c339aa17975ddd",
+      "size": 165612636,
+      "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-ft-1.0.0/htdemucs_ft_drums_fp16weights.onnx"
+    },
+    {
+      "name": "htdemucs_ft_bass_fp16weights.onnx",
+      "stem": "bass",
+      "sha256": "b533037176b14b2df31c92a5d5b3d5660d0811b9b360d3db761964768b079961",
+      "size": 165612636,
+      "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-ft-1.0.0/htdemucs_ft_bass_fp16weights.onnx"
+    },
+    {
+      "name": "htdemucs_ft_other_fp16weights.onnx",
+      "stem": "other",
+      "sha256": "b739171a7057b3107bb0711c6222d4a619b41b13a8f04026431d30f32ad2bd71",
+      "size": 165612636,
+      "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-ft-1.0.0/htdemucs_ft_other_fp16weights.onnx"
+    },
+    {
+      "name": "LICENSE.txt",
+      "sha256": "e6769b242692ea36c086bd3714356af2638eee0d220ad1fc7e93fbad5e1fe587",
+      "size": 1482,
+      "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-ft-1.0.0/LICENSE.txt"
+    }
+  ],
+  "results": [
+    "acapella",
+    "instrumental",
+    "stems4"
+  ],
+  "device_pref": "any",
+  "min_vram_mb": 0,
+  "est_rtf": {
+    "cpu": 0.6,
+    "gpu": 0.1
+  },
+  "min_engine_version": "0.1.0",
+  "total_bytes": 662452026
+}
