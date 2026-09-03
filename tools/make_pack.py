@@ -17,35 +17,44 @@ ROOT = Path(__file__).resolve().parent.parent
 PACKS = {
     "demucs-ft": {
         "name": "Standard (4 stems)",
-        "description": "Vocals, Drums, Bass, Other. Meta's fine-tuned HT-Demucs. Runs on any CPU.",
+        "description": "Vocals, Drums, Bass, Other. Meta's fine-tuned HT-Demucs. Runs on any CPU, and on any DirectX 12 GPU.",
         "family": "demucs",
         "license": {"spdx": "MIT", "url": "https://github.com/facebookresearch/demucs", "text_file": "LICENSE.txt"},
         "credits": [
             "Meta AI Research: HT-Demucs (Rouard, Massa, Defossez, ICASSP 2023)",
-            "StemSplit: ONNX export (huggingface.co/StemSplitio/htdemucs-ft-onnx)",
+            "sevagh/demucs.onnx: the host-STFT export shape (MIT)",
         ],
         "stems": ["vocals", "drums", "bass", "other"],
         "virtual_stems": ["instrumental"],
         "sample_rate": 44100,
-        "impl": {"kind": "demucs_waveform", "input": "mix", "output": "stems",
+        # 1.1.0: the STFT/iSTFT moved OUT of the graph (kind demucs_hoststft,
+        # inputs mix + complex-as-channels spectrogram, outputs the spectral
+        # and time branches). One graph serves the CPU and DirectML; the
+        # in-graph transform of the 1.0.0 export never finished on DirectML.
+        "impl": {"kind": "demucs_hoststft", "input": "mix", "output": "spec_out",
+                 "inputs": ["mix", "spec"], "outputs": ["spec_out", "wave_out"],
                  "segment_samples": 343980, "overlap": 0.25,
                  "stems_order": ["drums", "bass", "other", "vocals"]},
         "model_files": [
-            ("htdemucs_ft_vocals_fp16weights.onnx", "vocals"),
-            ("htdemucs_ft_drums_fp16weights.onnx", "drums"),
-            ("htdemucs_ft_bass_fp16weights.onnx", "bass"),
-            ("htdemucs_ft_other_fp16weights.onnx", "other"),
+            ("htdemucs_ft_vocals_hoststft_fp16weights.onnx", "vocals"),
+            ("htdemucs_ft_drums_hoststft_fp16weights.onnx", "drums"),
+            ("htdemucs_ft_bass_hoststft_fp16weights.onnx", "bass"),
+            ("htdemucs_ft_other_hoststft_fp16weights.onnx", "other"),
         ],
         "results": ["acapella", "instrumental", "stems4"],
         "device_pref": "any", "min_vram_mb": 0,
-        "est_rtf": {"cpu": 0.6, "gpu": 0.1},
-        "min_engine_version": "0.1.0",
+        # Measured 2026-09-02 (13900K / RTX 4090): CPU 0.24, DirectML 0.05
+        # including the engine's 40 % rest between chunks. Laptops run the
+        # CPU figure several times slower; the estimate is corrected by the
+        # first measured run.
+        "est_rtf": {"cpu": 0.6, "gpu": 0.06},
+        "min_engine_version": "0.2.0",
         "license_notice": (
             "NOTICE\n"
             "This pack contains ONNX exports of Meta's HT-Demucs fine-tuned models (htdemucs_ft),\n"
             "released by Meta Platforms, Inc. under the MIT License reproduced below.\n"
-            "The ONNX conversion was published by StemSplit (huggingface.co/StemSplitio/htdemucs-ft-onnx)\n"
-            "under the MIT License. Weights are stored as float16 and computed in float32.\n"
+            "The ONNX export keeps the spectral transform on the host, following sevagh/demucs.onnx\n"
+            "(MIT). Weights are stored as float16 and computed in float32.\n"
             "Packaged for WAVdesk's vs_split engine by Vacant Systems.\n\n"
         ),
     },

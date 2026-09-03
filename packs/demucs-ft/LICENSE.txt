@@ -1,8 +1,8 @@
 NOTICE
 This pack contains ONNX exports of Meta's HT-Demucs fine-tuned models (htdemucs_ft),
 released by Meta Platforms, Inc. under the MIT License reproduced below.
-The ONNX conversion was published by StemSplit (huggingface.co/StemSplitio/htdemucs-ft-onnx)
-under the MIT License. Weights are stored as float16 and computed in float32.
+The ONNX export keeps the spectral transform on the host, following sevagh/demucs.onnx
+(MIT). Weights are stored as float16 and computed in float32.
 Packaged for WAVdesk's vs_split engine by Vacant Systems.
 
 MIT License
