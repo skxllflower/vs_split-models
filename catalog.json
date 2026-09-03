@@ -1,8 +1,96 @@
 {
   "schema": 1,
-  "updated": "2026-09-02",
+  "updated": "2026-09-03",
   "catalog_url": "https://github.com/skxllflower/vs_split-models/releases/download/catalog/catalog.json",
   "packs": [
+    {
+      "schema": 1,
+      "id": "demucs-6s",
+      "name": "Six stems",
+      "description": "Vocals, Drums, Bass, Guitar, Piano, Other. Meta's six-source HT-Demucs. Runs on any CPU, and on any DirectX 12 GPU. Guitar and piano are experimental upstream.",
+      "family": "demucs",
+      "version": "1.0.0",
+      "license": {
+        "spdx": "MIT",
+        "url": "https://github.com/facebookresearch/demucs",
+        "text_file": "LICENSE.txt"
+      },
+      "credits": [
+        "Meta AI Research: HT-Demucs (Rouard, Massa, Defossez, ICASSP 2023)",
+        "sevagh/demucs.onnx: the host-STFT export shape (MIT)"
+      ],
+      "stems": [
+        "vocals",
+        "drums",
+        "bass",
+        "other",
+        "guitar",
+        "piano"
+      ],
+      "virtual_stems": [
+        "instrumental"
+      ],
+      "sample_rate": 44100,
+      "impl": {
+        "kind": "demucs_hoststft",
+        "input": "mix",
+        "output": "spec_out",
+        "inputs": [
+          "mix",
+          "spec"
+        ],
+        "outputs": [
+          "spec_out",
+          "wave_out"
+        ],
+        "segment_samples": 343980,
+        "overlap": 0.25,
+        "stems_order": [
+          "drums",
+          "bass",
+          "other",
+          "vocals",
+          "guitar",
+          "piano"
+        ]
+      },
+      "files": [
+        {
+          "name": "htdemucs_6s_hoststft_fp16weights.onnx",
+          "sha256": "9dd69882a13027ef970fb90f14401bd9a639202797cbddd782b01146aa1cc673",
+          "size": 74847188,
+          "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-6s-1.0.0/htdemucs_6s_hoststft_fp16weights.onnx",
+          "stem": "",
+          "stems": [
+            "drums",
+            "bass",
+            "other",
+            "vocals",
+            "guitar",
+            "piano"
+          ]
+        },
+        {
+          "name": "LICENSE.txt",
+          "sha256": "66e145267f8c22799b26290173f102918aca2c1a3895be5b9e0db1b636fb88d3",
+          "size": 1461,
+          "url": "https://github.com/skxllflower/vs_split-models/releases/download/demucs-6s-1.0.0/LICENSE.txt"
+        }
+      ],
+      "results": [
+        "acapella",
+        "instrumental",
+        "stems4"
+      ],
+      "device_pref": "any",
+      "min_vram_mb": 0,
+      "est_rtf": {
+        "cpu": 0.15,
+        "gpu": 0.02
+      },
+      "min_engine_version": "0.2.0",
+      "total_bytes": 74848649
+    },
     {
       "schema": 1,
       "id": "demucs-ft",

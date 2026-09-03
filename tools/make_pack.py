@@ -58,6 +58,40 @@ PACKS = {
             "Packaged for WAVdesk's vs_split engine by Vacant Systems.\n\n"
         ),
     },
+    "demucs-6s": {
+        "name": "Six stems",
+        "description": "Vocals, Drums, Bass, Guitar, Piano, Other. Meta's six-source HT-Demucs. Runs on any CPU, and on any DirectX 12 GPU. Guitar and piano are experimental upstream.",
+        "family": "demucs",
+        "license": {"spdx": "MIT", "url": "https://github.com/facebookresearch/demucs", "text_file": "LICENSE.txt"},
+        "credits": [
+            "Meta AI Research: HT-Demucs (Rouard, Massa, Defossez, ICASSP 2023)",
+            "sevagh/demucs.onnx: the host-STFT export shape (MIT)",
+        ],
+        "stems": ["vocals", "drums", "bass", "other", "guitar", "piano"],
+        "virtual_stems": ["instrumental"],
+        "sample_rate": 44100,
+        "impl": {"kind": "demucs_hoststft", "input": "mix", "output": "spec_out",
+                 "inputs": ["mix", "spec"], "outputs": ["spec_out", "wave_out"],
+                 "segment_samples": 343980, "overlap": 0.25,
+                 "stems_order": ["drums", "bass", "other", "vocals", "guitar", "piano"]},
+        # ONE graph serves all six stems (a multi-stem file lists them in
+        # `stems`; the engine runs it once per chunk).
+        "model_files": [
+            ("htdemucs_6s_hoststft_fp16weights.onnx", ["drums", "bass", "other", "vocals", "guitar", "piano"]),
+        ],
+        "results": ["acapella", "instrumental", "stems4"],
+        "device_pref": "any", "min_vram_mb": 0,
+        "est_rtf": {"cpu": 0.15, "gpu": 0.02},
+        "min_engine_version": "0.2.0",
+        "license_notice": (
+            "NOTICE\n"
+            "This pack contains an ONNX export of Meta's six-source HT-Demucs model (htdemucs_6s),\n"
+            "released by Meta Platforms, Inc. under the MIT License reproduced below.\n"
+            "The ONNX export keeps the spectral transform on the host, following sevagh/demucs.onnx\n"
+            "(MIT). Weights are stored as float16 and computed in float32.\n"
+            "Packaged for WAVdesk's vs_split engine by Vacant Systems.\n\n"
+        ),
+    },
 }
 
 
@@ -83,7 +117,14 @@ def main():
     files = []
     for name, stem in spec["model_files"]:
         p = src_dir / name
-        files.append({"name": name, "stem": stem, "sha256": sha256_of(p), "size": p.stat().st_size, "url": base + name})
+        entry = {"name": name, "sha256": sha256_of(p), "size": p.stat().st_size, "url": base + name}
+        # A list = one file serving several stems (`stems`); a string = one stem.
+        if isinstance(stem, list):
+            entry["stem"] = ""
+            entry["stems"] = stem
+        else:
+            entry["stem"] = stem
+        files.append(entry)
     files.append({"name": "LICENSE.txt", "sha256": sha256_of(lic_path), "size": lic_path.stat().st_size, "url": base + "LICENSE.txt"})
 
     manifest = {
