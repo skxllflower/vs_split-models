@@ -187,6 +187,79 @@
       },
       "min_engine_version": "0.2.0",
       "total_bytes": 420085860
+    },
+    {
+      "schema": 1,
+      "id": "roformer-kim-vocals",
+      "name": "Best Acapella",
+      "description": "Vocals and instrumental from Kim's Mel-Band RoFormer, the vocal separator at the top of the public listening tests. Runs on any CPU (slowly) and on any DirectX 12 GPU.",
+      "family": "roformer",
+      "version": "1.0.0",
+      "license": {
+        "spdx": "MIT",
+        "url": "https://huggingface.co/KimberleyJSN/melbandroformer",
+        "text_file": "LICENSE.txt"
+      },
+      "credits": [
+        "KimberleyJSN: Mel-Band RoFormer vocals checkpoint (MIT)",
+        "Roman Solovyev (ZFTurbo), Phil Wang (lucidrains): Mel-Band RoFormer code (MIT)",
+        "Wang et al.: Mel-Band RoFormer for Music Source Separation (ICASSP 2024)"
+      ],
+      "stems": [
+        "vocals"
+      ],
+      "virtual_stems": [
+        "instrumental"
+      ],
+      "sample_rate": 44100,
+      "impl": {
+        "kind": "roformer_hoststft",
+        "input": "spec",
+        "output": "spec_out",
+        "inputs": [
+          "spec"
+        ],
+        "outputs": [
+          "spec_out"
+        ],
+        "segment_samples": 352800,
+        "overlap": 0.5,
+        "stems_order": [
+          "vocals"
+        ],
+        "stft": {
+          "n_fft": 2048,
+          "hop": 441,
+          "normalized": false
+        }
+      },
+      "files": [
+        {
+          "name": "roformer-kim-vocals_vocals_hoststft_fp16weights.onnx",
+          "sha256": "9df8877feaeaa45f3219582541512a339023f4e6745a954fc2a3a75cbf1b8ffb",
+          "size": 473693091,
+          "url": "https://github.com/skxllflower/vs_split-models/releases/download/roformer-kim-vocals-1.0.0/roformer-kim-vocals_vocals_hoststft_fp16weights.onnx",
+          "stem": "vocals"
+        },
+        {
+          "name": "LICENSE.txt",
+          "sha256": "1e53e0a33beca2ebee97e375079ddd0083e300b986eeba6e3a1a323d36b1ad95",
+          "size": 1822,
+          "url": "https://github.com/skxllflower/vs_split-models/releases/download/roformer-kim-vocals-1.0.0/LICENSE.txt"
+        }
+      ],
+      "results": [
+        "acapella",
+        "instrumental"
+      ],
+      "device_pref": "any",
+      "min_vram_mb": 0,
+      "est_rtf": {
+        "cpu": 3.0,
+        "gpu": 0.06
+      },
+      "min_engine_version": "0.3.0",
+      "total_bytes": 473694913
     }
   ]
 }

@@ -45,3 +45,22 @@ license text is vendored per pack and the authors are credited in WAVdesk's Abou
 
 The catalog, manifests, and tooling in this repository are MIT. Each model pack carries its own
 license in `packs/<pack_id>/LICENSE.txt` and in its Release notes.
+
+## Bring your own RoFormer
+
+`tools/roformer_pack.py` turns a Music-Source-Separation-Training style **Mel-Band RoFormer**
+checkpoint (Kim's vocals model and most community vocal models) into a pack folder:
+
+```
+python tools/roformer_pack.py model.ckpt config.yaml out/ --id my-vocals --name "My vocals" \
+    --license-spdx MIT --license-url https://... --license-file LICENSE.txt --check song.wav
+```
+
+It exports the graph without its STFT (WAVdesk's engine computes the transform on the host, pack
+kind `roformer_hoststft`, engine 0.3.0 or later), simplifies it, stores the weights as float16,
+checks the export against the PyTorch model, and writes `pack.json` + `LICENSE.txt` beside the
+`.onnx`. Install that folder from WAVdesk's **Settings → Models → Add Pack from Folder**; it then
+appears in every Model list and removes like a downloaded pack. Python needs: torch (CPU is
+fine), einops, rotary-embedding-torch, librosa, beartype, pyyaml, onnx, onnxruntime, onnxsim,
+onnxconverter-common, soundfile. The vendored model code under `tools/roformer/` is ZFTurbo's
+(MIT, `LICENSE.msst.txt`). Only ship packs whose weights you are licensed to redistribute.

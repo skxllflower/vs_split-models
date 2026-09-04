@@ -1,6 +1,7 @@
 """Build packs/<id>/pack.json + LICENSE.txt and regenerate catalog.json.
 
 usage: python tools/make_pack.py demucs-ft <dir-with-model-files> <version>
+       python tools/make_pack.py catalog          (regenerate catalog.json only)
 The model files must already be in <dir>; hashes/sizes are computed here. Asset URLs point at the
 GitHub Release tag "<id>-<version>" of this repo. Run from the repo root.
 """
@@ -103,7 +104,26 @@ def sha256_of(p: Path) -> str:
     return h.hexdigest()
 
 
+def regen_catalog():
+    """catalog.json from every packs/*/pack.json: the spec'd packs above and any
+    converter-built pack folder copied under packs/<id>/."""
+    packs = []
+    for pj in sorted(ROOT.glob("packs/*/pack.json")):
+        packs.append(json.loads(pj.read_text(encoding="utf-8")))
+    catalog = {
+        "schema": 1, "updated": date.today().isoformat(),
+        "catalog_url": f"https://github.com/{REPO}/releases/download/catalog/catalog.json",
+        "packs": packs,
+    }
+    (ROOT / "catalog.json").write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8", newline="\n")
+    return packs
+
+
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] == "catalog":
+        packs = regen_catalog()
+        print(f"wrote catalog.json with {len(packs)} pack(s)")
+        return
     pack_id, src_dir, version = sys.argv[1], Path(sys.argv[2]), sys.argv[3]
     spec = PACKS[pack_id]
     out_dir = ROOT / "packs" / pack_id
@@ -137,16 +157,7 @@ def main():
     }
     (out_dir / "pack.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
 
-    # Regenerate the catalog from every packs/*/pack.json (newest version per id wins by string compare).
-    packs = []
-    for pj in sorted(ROOT.glob("packs/*/pack.json")):
-        packs.append(json.loads(pj.read_text(encoding="utf-8")))
-    catalog = {
-        "schema": 1, "updated": date.today().isoformat(),
-        "catalog_url": f"https://github.com/{REPO}/releases/download/catalog/catalog.json",
-        "packs": packs,
-    }
-    (ROOT / "catalog.json").write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8", newline="\n")
+    packs = regen_catalog()
     print(f"wrote {out_dir / 'pack.json'} ({manifest['total_bytes']} bytes across {len(files)} files) and catalog.json with {len(packs)} pack(s)")
 
 
