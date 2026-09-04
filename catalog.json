@@ -236,8 +236,8 @@
       "files": [
         {
           "name": "roformer-kim-vocals_vocals_hoststft_fp16weights.onnx",
-          "sha256": "9df8877feaeaa45f3219582541512a339023f4e6745a954fc2a3a75cbf1b8ffb",
-          "size": 473693091,
+          "sha256": "0a2cb2880a87ad087d7b6bbc07ff451badfdfa19fabe759614e3548569654bf8",
+          "size": 473674832,
           "url": "https://github.com/skxllflower/vs_split-models/releases/download/roformer-kim-vocals-1.0.0/roformer-kim-vocals_vocals_hoststft_fp16weights.onnx",
           "stem": "vocals"
         },
@@ -259,7 +259,7 @@
         "gpu": 0.06
       },
       "min_engine_version": "0.3.0",
-      "total_bytes": 473694913
+      "total_bytes": 473676654
     }
   ]
 }

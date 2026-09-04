@@ -203,8 +203,12 @@ def main():
                 m, keep_io_types=True,
                 op_block_list=list(float16.DEFAULT_OP_BLOCK_LIST) + [
                     "ReduceL2", "ReduceSum", "ReduceMean", "ReduceMax", "Pow", "Sqrt", "Div",
-                    "Clip", "Softmax", "Exp", "Log", "Erf", "Sigmoid",
+                    "Clip", "Max", "Min", "Expand", "Softmax", "Exp", "Log", "Erf", "Sigmoid",
                 ])
+            # F.normalize is ReduceL2 -> Clip(eps 1e-12) -> Expand -> Div: the
+            # clamped norm of a SILENT frame is 1e-12, below float16's range,
+            # so an Expand in float16 hands the Div a zero and the chunk goes
+            # NaN on DirectML. Everything on that path stays float32.
             onnx.save(m16, final_path)
             graph_path = final_path
             print(f"fp16 weights: {os.path.getsize(final_path) >> 20} MB", flush=True)
