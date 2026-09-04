@@ -66,7 +66,7 @@
   "min_vram_mb": 0,
   "est_rtf": {
     "cpu": 3.0,
-    "gpu": 0.06
+    "gpu": 0.18
   },
   "min_engine_version": "0.3.0",
   "total_bytes": 473676654
